@@ -1,0 +1,137 @@
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.7"
+}
+
+project.afterEvaluate {
+    def buildVariants = []
+    android.applicationVariants.all { flavor ->
+        buildVariants.add(flavor.name)
+    }
+
+    //remove variants
+    buildVariants = buildVariants.findAll {
+        it.toLowerCase().contains("debug")
+    }
+
+    def buildTypeName = "debug"
+    def sourceName = buildVariants[0]
+    def testMethod = "test${sourceName.capitalize()}UnitTest"
+
+    //create the task
+    task "jacoco${buildTypeName.capitalize()}TestReport"(type: JacocoReport, dependsOn:
+        [testMethod]
+    ) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports build."
+
+        def fileFilter = [
+            //UI non testable
+            '**/*ViewHolder*.*',
+            '**/*Fragment*.*',
+            '**/*BottomSheet*.*',
+            '**/*Activity*.*',
+            '**/*Binding.*',
+            '**/*Navigator*.*',
+            '**/*NavigatorImpl*.*',
+            '**/*LauncherImpl*.*',
+            '**/*Dialog*.*',
+            '**/app/ui/**',
+            '**/app/utils/**',
+            '**/*Service.*',
+            '**/*SpaceItemDecoration*.*',
+            '**/diffUtils/**',
+            '**/di/**',
+            '**/CitygoApplication*.*',
+            '**/app/analytics/**',
+            //data
+            '**/*serializer*.*', //exclude kotlin json serialization
+            '**/*Request$Companion*.*', //exclude kotlin json serialization
+            '**/*Response$Companion*.*', //exclude kotlin json serialization
+            '**/*Router*.*', //exclude all routers since we don't test them
+            '**/data/fixtures/**', //exclude all fixture
+            '**/network/api/*ServiceApi.kt', //exclude all ServiceApi interfaces
+            //domain
+            '**/domain/repositories/**',
+            '**/domain/models/**',
+            //presentation
+            '**/presenter/protocols/ui/**',
+            '**/presenter/utils/**',
+            '**/presenter/models/*/*Item.kt',
+            //generated
+            '**/BuildConfig*.*',
+            '**/R.class',
+            '**/R',
+            '**/R$*.class',
+            '**/Manifest*.*',
+            '**/*$ViewInjector*.*',
+            '**/*$ViewBinder*.*',
+            '**/*Module.*', // Modules for Dagger.
+            '**/dagger/hilt/**', // Modules for Dagger hilt.
+            '**/*Dagger*.*', // Dagger auto-generated code.
+            '**/*MembersInjector*.*', // Dagger auto-generated code.
+            '**/*_Provide*Factory*.*', //Dagger
+            '**/*_Factory*.*', //Dagger auto-generated code
+            '**/*AssistedFactory*.*', //Dagger auto-generated code
+            '**/*AssistedFactory_Factory*.*', //Dagger auto-generated code
+            '**/*GeneratedInjector*.*', //Dagger auto-generated code
+            '**/*MemberInjector*.*', //Dagger auto-generated code
+            '**/*__Factory.*',  //Dagger auto-generated code
+            '**/*_HiltModule*.*',  //Dagger auto-generated code
+            '**/Hilt_*.*',  //Dagger auto-generated code,
+            'hilt_aggregated_deps/*',  //Dagger auto-generated code
+            //add libraries
+            'android/**/*.*',
+            'androidx/**/*.*',
+            'uk/**/*.*',
+            'io/**/*.*',
+            //remove what we don't test
+            'androidTest/**/*.*',
+            'test/**/*.*',
+            '**/injector/**/*.*',
+            '**/**_ViewBinding**',
+            '**/*EventType.*',
+            '**/**Mocked'
+        ]
+
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+
+        def javaTrees = []
+        def kotlinTrees = []
+
+        def kotlinClassesDir = "${buildDir}/tmp/kotlin-classes/${sourceName}/"
+        def javaClassesDir = "${buildDir}/intermediates/javac/${sourceName}/classes/"
+
+        javaTrees.add(fileTree(
+            dir: javaClassesDir,
+            excludes: fileFilter
+        ))
+        kotlinTrees.add(fileTree(
+            dir: kotlinClassesDir,
+            excludes: fileFilter
+        ))
+
+        // generated classes
+        getClassDirectories().from(files([
+            javaTrees,
+            kotlinTrees
+        ]))
+        // sources
+        getSourceDirectories().from(files([
+            android.sourceSets.main.java.srcDirs,
+            "src/main/kotlin"
+        ]))
+
+        getExecutionData().from(
+            files([
+                fileTree(project.projectDir) {
+                    setIncludes(["**/**/*.exec", "**/**/*.ec"])
+                }
+            ])
+        )
+    }
+}
