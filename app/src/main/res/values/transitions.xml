@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="transition_user_photo" translatable="false">transition_user_photo</string>
+    <string name="transition_user_title" translatable="false">transition_user_title</string>
+    <string name="transition_user_full_name" translatable="false">transition_user_full_name</string>
+</resources>

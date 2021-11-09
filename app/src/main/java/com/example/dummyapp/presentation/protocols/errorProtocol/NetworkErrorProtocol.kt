@@ -1,6 +1,5 @@
 package com.example.dummyapp.presentation.protocols.errorProtocol
 
-import android.view.ViewGroup
 import com.example.dummyapp.domain.exception.DomainNetworkException
 import com.example.dummyapp.domain.exception.toDomainExceptionType
 

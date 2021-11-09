@@ -1,8 +1,8 @@
 package com.example.dummyapp.presentation.protocols.disposeProvider
 
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import com.example.dummyapp.presentation.protocols.errorProtocol.ErrorProtocol
 import com.example.dummyapp.presentation.protocols.ui.Loadable
 import io.reactivex.rxjava3.core.Single
@@ -17,20 +17,31 @@ interface DisposablePresenter<View> : Presenter<View>, DisposeProvider {
         super<DisposeProvider>.attach(lifecycle)
     }
     
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            destroy()
+        }
+    }
+    
     override fun destroy() {
         super<Presenter>.destroy()
         super<DisposeProvider>.destroy()
     }
 }
 
-interface DisposeProvider : LifecycleObserver {
+interface DisposeProvider : LifecycleEventObserver {
     val disposeBag: CompositeDisposable
     
     fun attach(lifecycle: Lifecycle) {
         lifecycle.addObserver(this)
     }
     
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            destroy()
+        }
+    }
+    
     fun destroy() {
         disposeBag.dispose()
     }
@@ -44,7 +55,7 @@ operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
     add(disposable)
 }
 
-interface Presenter<View> : LifecycleObserver {
+interface Presenter<View> : LifecycleEventObserver {
     var attachedUnsafeView: View?
     
     @Suppress("UNCHECKED_CAST")
@@ -56,7 +67,12 @@ interface Presenter<View> : LifecycleObserver {
         lifecycle.addObserver(this)
     }
     
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            destroy()
+        }
+    }
+
     fun destroy() {
         attachedUnsafeView = null
     }

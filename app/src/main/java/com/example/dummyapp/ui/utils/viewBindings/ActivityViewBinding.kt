@@ -4,8 +4,8 @@ import android.os.Looper
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -21,7 +21,7 @@ inline fun <reified T : ViewBinding> AppCompatActivity.activityViewBinding(noinl
 class ActivityViewBindingPropertyDelegate<T : ViewBinding>(
     private val activity: AppCompatActivity,
     private val initializer: (LayoutInflater) -> T
-) : ReadOnlyProperty<AppCompatActivity, T>, LifecycleObserver {
+) : ReadOnlyProperty<AppCompatActivity, T>, LifecycleEventObserver {
     
     private var _value: T? = null
     
@@ -29,8 +29,13 @@ class ActivityViewBindingPropertyDelegate<T : ViewBinding>(
         activity.lifecycle.addObserver(this)
     }
     
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun onCreate() {
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_CREATE) {
+            onCreate()
+        }
+    }
+
+    private fun onCreate() {
         if (_value == null) {
             _value = initializer(activity.layoutInflater)
         }
