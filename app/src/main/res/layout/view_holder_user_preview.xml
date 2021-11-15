@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="16dp"
+    app:cardPreventCornerOverlap="false"
+    app:rippleColor="@color/colorPrimary"
+    tools:context=".ui.modules.userlist.viewHolder.UserPreviewViewHolder">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/userImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:transitionName="@string/transition_user_photo"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/Widget.MaterialComponents.ShapeableImageView.CornerRadius8" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/userTitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:transitionName="@string/transition_user_title"
+            app:layout_constraintEnd_toStartOf="@id/indicatorContainer"
+            app:layout_constraintStart_toEndOf="@id/userImageView"
+            app:layout_constraintTop_toTopOf="@id/userImageView"
+            tools:text="Mr" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/userNameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:transitionName="@string/transition_user_full_name"
+            app:layout_constraintBottom_toBottomOf="@id/userImageView"
+            app:layout_constraintEnd_toStartOf="@id/indicatorContainer"
+            app:layout_constraintStart_toEndOf="@id/userImageView"
+            app:layout_constraintTop_toBottomOf="@id/userTitleTextView"
+            tools:text="Toto Toto" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/indicatorContainer"
+            android:layout_width="35dp"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_info" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

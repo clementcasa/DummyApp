@@ -9,8 +9,8 @@ class AppIdInterceptor @Inject constructor() : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val newRequest = request.newBuilder()
-                .header("app-id", BuildConfig.API_APP_ID)
-                .build()
+            .header("app-id", BuildConfig.API_APP_ID)
+            .build()
         return chain.proceed(newRequest)
     }
 }
