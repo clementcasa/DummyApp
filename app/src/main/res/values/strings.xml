@@ -1,0 +1,24 @@
+<resources>
+    <string name="main_welcome_message">Welcome to this app showcase !</string>
+    <string name="main_user_list_button">User List</string>
+    <string name="user_list_title">"Users' list"</string>
+    <string name="user_list_empty_text">No user found…</string>
+    <string name="user_list_load_more_button">Load more users…</string>
+    <string name="user_details_title">User details</string>
+    <string name="user_details_info_button">Info</string>
+    <string name="user_details_address_button">Address</string>
+    <string name="user_details_gender_title">Gender</string>
+    <string name="user_details_date_of_birth_title">Date of birth</string>
+    <string name="user_details_registration_date_title">Registration date</string>
+    <string name="user_details_email_title">Email</string>
+    <string name="user_details_phone_title">Phone</string>
+    <string name="user_details_google_coming_soon">Google maps is coming soon...</string>
+    <string name="user_gender_male">Male</string>
+    <string name="user_gender_female">Female</string>
+    <string name="user_gender_other">Other</string>
+    <string name="user_title_mr">Mr</string>
+    <string name="user_title_ms">Ms</string>
+    <string name="user_title_mrs">Mrs</string>
+    <string name="user_title_miss">Miss</string>
+    <string name="user_title_dr">Dr</string>
+</resources>
